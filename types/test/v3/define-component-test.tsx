@@ -931,17 +931,17 @@ describe('emits', () => {
     }
   })
 
-  // defineComponent({
-  //   render() {
-  //     return (
-  //       <Component
-  //         onClick={(n: number) => {
-  //           return n + 1
-  //         }}
-  //       />
-  //     )
-  //   }
-  // })
+  defineComponent({
+    render() {
+      return (
+        <Component
+          onClick={(n: number) => {
+            return n + 1
+          }}
+        />
+      )
+    }
+  })
 
   // without emits
   defineComponent({

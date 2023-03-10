@@ -1,7 +1,7 @@
 import { Vue } from './vue'
 import { VNode } from './vnode'
 import { ComponentOptions as Vue2ComponentOptions } from './options'
-import { EmitsOptions, SetupContext } from './v3-setup-context'
+import { EmitsOptions, EmitsToProps, SetupContext } from './v3-setup-context'
 import { Data, LooseRequired, UnionToIntersection } from './common'
 import {
   ComponentPropsOptions,
@@ -147,7 +147,7 @@ export type ComponentOptionsWithProps<
   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   Emits extends EmitsOptions = {},
   EmitsNames extends string = string,
-  Props = ExtractPropTypes<PropsOptions>,
+  Props = Readonly<ExtractPropTypes<PropsOptions>> & EmitsToProps<Emits>,
   Defaults = ExtractDefaultPropTypes<PropsOptions>
 > = ComponentOptionsBase<
   Props,
@@ -185,7 +185,7 @@ export type ComponentOptionsWithArrayProps<
   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   Emits extends EmitsOptions = {},
   EmitsNames extends string = string,
-  Props = Readonly<{ [key in PropNames]?: any }>
+  Props = Readonly<{ [key in PropNames]?: any }> & EmitsToProps<Emits>
 > = ComponentOptionsBase<
   Props,
   RawBindings,
@@ -221,9 +221,10 @@ export type ComponentOptionsWithoutProps<
   Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   Emits extends EmitsOptions = {},
-  EmitsNames extends string = string
+  EmitsNames extends string = string,
+  PE = Props & EmitsToProps<Emits>
 > = ComponentOptionsBase<
-  Props,
+  PE,
   RawBindings,
   D,
   C,
@@ -237,7 +238,7 @@ export type ComponentOptionsWithoutProps<
   props?: undefined
 } & ThisType<
     CreateComponentPublicInstance<
-      Props,
+      PE,
       RawBindings,
       D,
       C,
